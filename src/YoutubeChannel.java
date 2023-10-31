@@ -1,13 +1,16 @@
 import java.util.ArrayList;
 import java.util.List;
 
-class YoutubeChannel implements Subject {
+class YoutubeChannel implements IYoutubeChannel, IMonetizeContent {
 	private String channelName;
-	private List<Observer> subscribers = new ArrayList<>();
+	private String channelType;
+	private boolean isMonetized;
+	private ArrayList<YoutubeAccount> subscribers = new ArrayList<>();
 	private String latestVideoTitle;
 	
-	public YoutubeChannel(String channelName) {
+	public YoutubeChannel(String channelName, boolean isMonetized) {
 		this.channelName = channelName;
+		setMonetize(isMonetized);
 	}
 	
 	public void uploadVideo(String videoTitle) {
@@ -16,19 +19,24 @@ class YoutubeChannel implements Subject {
 	}
 	
 	@Override
-	public void subscribe(Observer observer) {
-		subscribers.add(observer);
+	public void addSubscriber(YoutubeAccount youtubeAccount) {
+		subscribers.add(youtubeAccount);
 	}
 	
 	@Override
-	public void unsubscribe(Observer observer) {
-		subscribers.remove(observer);
+	public void removeSubscriber(YoutubeAccount youtubeAccount) {
+		subscribers.remove(youtubeAccount);
 	}
 	
 	@Override
 	public void notifySubscribers(String videoTitle) {
-		for (Observer subscriber : subscribers) {
+		for (YoutubeAccount subscriber : subscribers) {
 			subscriber.newVideoNotification(channelName, videoTitle);
 		}
+	}
+	
+	@Override
+	public void setMonetize(boolean isMonetized) {
+		this.isMonetized = isMonetized;
 	}
 }
